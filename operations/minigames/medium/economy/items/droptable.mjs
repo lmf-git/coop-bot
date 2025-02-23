@@ -105,7 +105,10 @@ export default class DropTable {
     }
 
     static getRandomTiered(level) {
-        return STATE.CHANCE.pickone(this.TIERS[level]);
+        return STATE.CHANCE.weighted(
+            [this.TIERS.LEGENDARY, this.TIERS.RARE, this.TIERS.AVERAGE],
+            [this.TIER_QTYS.LEGENDARY.max, this.TIER_QTYS.RARE.max, this.TIER_QTYS.AVERAGE.max]
+        );
     }
 
     // This is effectively complete, but need to figure out when it will be used.

@@ -32,7 +32,7 @@ export default class ChestPopMinigame {
                 return await interaction.reply({ content: 'You broke a key attemping to open it.', ephemeral: true });
     
             // Pick rewards from opening with key
-            const maxRewardAmount = STATE.CHANCE.natural({ min: 3, max: 7 });
+            const maxRewardAmount = STATE.CHANCE.natural({ min: 2, max: 5 });
             const rewardAmount = STATE.CHANCE.natural({ min: 1, max: maxRewardAmount });
             const drops = DropTable.getRandomWithQtyMany(rewardAmount);
 

@@ -41,10 +41,6 @@ export const EGG_DATA = {
 
 
 export default class EggHuntMinigame {
-    
-    static reactValid(reaction) {
-        return this.isEgghuntDrop(reaction.message.content);
-    }
 
     static isEgghuntDrop(messageStr) {
         const eggEmojiNames = _.map(_.values(EGG_DATA), "emoji");

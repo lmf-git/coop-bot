@@ -20,12 +20,6 @@ export default class DailyRewardMinigame {
         return new Date(lastClaim).getTime() <= twentyFourHoursAgo;
     }
 
-    // Safeguard: Check if the user has too many of the item
-    static async hasUserOverItemLimit(userId, item) {
-        // Check if user has 7 or more of the specified item
-        return await ItemsShared.hasQty(userId, item, 7);
-    }
-
     // Safeguard: Check if the user has an open trade for the same item
     static async hasOpenTradeForItem(userId, item) {
         const openTrades = await Trading.getByTrader(userId);
@@ -52,7 +46,7 @@ export default class DailyRewardMinigame {
             // Get one reward from droptable for Gathering drops
             const item = DropTable.getRandomTiered('GATHERING');
             // Safeguard item quantity (if user has equal or over 7, dont reward)
-            if (await this.hasUserOverItemLimit(userId, item)) return false;
+            if (await ItemsShared.hasQty(userId, item, 7)) return false;
             // Safeguard trading bypass (if user has outstanding trade with the itemtype, dont reward)
             if (await this.hasOpenTradeForItem(userId, item)) return false;
 

@@ -140,7 +140,7 @@ export default class UsableItemHelper {
                 );
 
             // If collecting a dropped egg, high chance (40%) of breaking due to having been dropped.
-            if (EggHuntMinigame.reactValid(reaction) && STATE.CHANCE.bool({ likelihood: 40 })) {
+            if (EggHuntMinigame.isEgghuntDrop(reaction.message.content) && STATE.CHANCE.bool({ likelihood: 40 })) {
                 // Clear after a while of showing the edited state.
                 // MESSAGES.delayDelete(reaction.message, 10000);
                 return MESSAGES.delayEdit(reaction.message,

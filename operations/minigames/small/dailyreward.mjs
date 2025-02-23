@@ -1,4 +1,4 @@
-import { CHANNELS, MESSAGES, USERS } from '../../../coop.mjs';
+import { CHANNELS, MESSAGES, USERS, INTERACTION } from '../../../coop.mjs';
 import DropTable from '../medium/economy/items/droptable.mjs';
 import TemporaryMessages from '../../activity/maintenance/temporaryMessages.mjs';
 import ItemsShared from "coop-shared/services/items.mjs";
@@ -44,7 +44,7 @@ export default class DailyRewardMinigame {
             // Safeguard claim date
             if(!(await this.allowClaimDate(lastClaim.last_claim))) 
                 // TODO: Reply could contain hours/mins until next claim
-                return await interaction.reply({ content: `Daily reward is on cooldown, try again later!`, ephemeral: true });;
+                return await INTERACTION.reply(interaction, `Daily reward is on cooldown, try again later!`);
 
             // Update the userLastClaim date
             await USERS.setUserLastClaim(userId)
@@ -52,9 +52,12 @@ export default class DailyRewardMinigame {
             // Get one reward from droptable for Gathering drops
             const item = DropTable.getRandomTiered('GATHERING');
             // Safeguard item quantity (if user has equal or over 7, dont reward)
-            if (await this.hasUserOverItemLimit(userId, item)) return false;
+            if (await this.hasUserOverItemLimit(userId, item)) 
+                return await INTERACTION.reply(interaction, `You already have the maximum amount of daily reward items!`);
+
             // Safeguard trading bypass (if user has outstanding trade with the itemtype, dont reward)
-            if (await this.hasOpenTradeForItem(userId, item)) return false;
+            if (await this.hasOpenTradeForItem(userId, item)) 
+                return await INTERACTION.reply(interaction, `You have an outstanding trade with the daily reward item.`);
 
             // Announce the rewards in TALK
             const dailyRewardText = `<@${userId}> collected the daily reward: ${MESSAGES.emojiCodeText(item)}`;
@@ -63,7 +66,7 @@ export default class DailyRewardMinigame {
 
             // Reward user with the item
             ItemsShared.add(interaction.user.id, item, 1, `Daily reward`);
-            return await interaction.reply({ content: `You claimed your daily reward! 🐔`, ephemeral: true });
+            return await INTERACTION.reply(interaction, `You claimed your daily reward! 🐔`);
 
         } catch (e) {
             console.error(e);
